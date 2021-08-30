@@ -9,15 +9,27 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// reference to ejs files inside the views folder
+
+//urls_index
 app.get("/urls", (req, res) => {
   const templateVars = { urls : urlDatabase };
   res.render("urls_index", templateVars)
 })
 
+//urls_shows
+app.get("/urls/:shortURL",(req, res) => { 
+ const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]} 
+ res.render("urls_shows", templateVars)
+})
+
+
+//main page
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+//outputing the urlDatabase in a JSON string
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -27,6 +39,7 @@ app.get("/hello", (req, res) => {
 })
 
 
+//Turning the server on
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`Tiny app listening on port ${PORT}!`);
 });
