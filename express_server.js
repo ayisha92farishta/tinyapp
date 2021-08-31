@@ -16,16 +16,21 @@ const urlDatabase = {
 
 // reference to ejs files inside the views folder
 
-//const bodyparser = require("body-parser");
-//app.use(bodyparser.urlencoded({extended: true}));
+const bodyparser = require("body-parser");
+app.use(bodyparser.urlencoded({extended: true}));
 
-app.use(express.urlencoded()); //using this instead of the codes above due to an error.
+//app.use(express.urlencoded()); //an alternative to the code above
 
 
 //urls_index
 app.get("/urls", (req, res) => {
   const templateVars = { urls : urlDatabase };
   res.render("urls_index", templateVars)
+})
+
+app.post("/urls",(req, res) => {
+  console.log(req.body);// Log the POST request body to the console
+  res.send("ok");       // Respond with 'Ok' (we will replace this)
 })
 
 //urls_new
