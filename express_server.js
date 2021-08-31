@@ -13,6 +13,10 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+function generateRandomString(len) {
+  var p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'');
+}
 
 // reference to ejs files inside the views folder
 
