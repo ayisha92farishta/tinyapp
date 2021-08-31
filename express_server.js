@@ -1,15 +1,26 @@
 const express = require("express");
+
+
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.set('view engine', 'ejs');
+
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+
 // reference to ejs files inside the views folder
+
+//const bodyparser = require("body-parser");
+//app.use(bodyparser.urlencoded({extended: true}));
+
+app.use(express.urlencoded()); //using this instead of the codes above due to an error.
+
 
 //urls_index
 app.get("/urls", (req, res) => {
