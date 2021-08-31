@@ -57,6 +57,10 @@ app.get("/u/:shortURL", (req, res) => {
   
   const longURL = urlDatabase[req.params.shortURL];
   
+  if(!longURL){
+   return res.status(404).send("Not found! Url not valid.");
+  }
+  
   res.redirect(longURL);
 });
 
