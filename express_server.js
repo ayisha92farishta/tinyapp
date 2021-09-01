@@ -33,13 +33,12 @@ app.get("/urls", (req, res) => {
 })
 
 app.post("/urls",(req, res) => {
-  console.log(req.body);// Log the POST request body to the console
-  //res.send("ok");       // Respond with 'Ok'
   const shortURL = generateRandomString(6);
   const data = req.body;
   urlDatabase[shortURL] = data.longURL; // saves data in the url database
   res.redirect(`/urls/${shortURL}`) //redirects user to the new url page
 })
+
 
 
 
@@ -52,6 +51,13 @@ app.get("/urls/new",(req, res) => {
 app.get("/urls/:shortURL",(req, res) => {
  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]} 
  res.render("urls_shows", templateVars)
+})
+
+app.post("/urls/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL;
+  console.log(req.body)
+  urlDatabase[shortURL] = data.longURL; //overwrites the long url under the existing short url
+  res.send("updated")
 })
 
 
@@ -69,7 +75,7 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-
+//post route in correspondence with the delete form in urls_index.ejs
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   delete urlDatabase[shortURL];
@@ -77,6 +83,11 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls")
 })
 
+//post route in correspondence with the delete form in urls_index.ejs
+app.post("/urls/:shortURL/edit", (req, res) => {
+
+  res.redirect("/urls/:shortURL")
+})
 
 
 //main page
