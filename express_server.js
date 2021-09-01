@@ -56,10 +56,11 @@ app.get("/urls/:shortURL",(req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   console.log(req.body)
+  const data = req.body;
   urlDatabase[shortURL] = data.longURL; //overwrites the long url under the existing short url
-  res.send("updated")
+  //res.send("updated")
+  res.redirect("/urls")
 })
-
 
 
 
@@ -83,10 +84,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls")
 })
 
-//post route in correspondence with the delete form in urls_index.ejs
+//post route in correspondence with the edit form in urls_index.ejs
 app.post("/urls/:shortURL/edit", (req, res) => {
-
-  res.redirect("/urls/:shortURL")
+  const shortURL = req.params.shortURL;
+  res.redirect(`/urls/${shortURL}`)
 })
 
 
