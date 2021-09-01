@@ -9,8 +9,8 @@ app.set('view engine', 'ejs');
 
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  // "b2xVn2": "http://www.lighthouselabs.ca",
+  // "9sm5xK": "http://www.google.com"
 };
 
 function generateRandomString(len) {
@@ -41,6 +41,8 @@ app.post("/urls",(req, res) => {
   res.redirect(`/urls/${shortURL}`) //redirects user to the new url page
 })
 
+
+
 //urls_new
 app.get("/urls/new",(req, res) => {
   res.render("urls_new")
@@ -51,6 +53,9 @@ app.get("/urls/:shortURL",(req, res) => {
  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]} 
  res.render("urls_shows", templateVars)
 })
+
+
+
 
 //redirects user to the longURL
 app.get("/u/:shortURL", (req, res) => {
@@ -65,19 +70,28 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL];
+  //res.send("Deleted")
+  res.redirect("/urls")
+})
+
+
+
 //main page
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-//outputing the urlDatabase in a JSON string
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
+// //outputing the urlDatabase in a JSON string
+// app.get("/urls.json", (req, res) => {
+//   res.json(urlDatabase);
+// });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n")
-})
+// app.get("/hello", (req, res) => {
+//   res.send("<html><body>Hello <b>World</b></body></html>\n")
+// })
 
 
 //Turning the server on
