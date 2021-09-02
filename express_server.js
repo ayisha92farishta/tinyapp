@@ -55,24 +55,17 @@ app.get("/urls/:shortURL",(req, res) => {
 
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  console.log(req.body)
   const data = req.body;
   urlDatabase[shortURL] = data.longURL; //overwrites the long url under the existing short url
-  //res.send("updated")
   res.redirect("/urls")
 })
 
-
-
 //redirects user to the longURL
 app.get("/u/:shortURL", (req, res) => {
-  
   const longURL = urlDatabase[req.params.shortURL];
-  
   if(!longURL){
    return res.status(404).send("Not found! Url not valid.");
-  }
-  
+  }  
   res.redirect(longURL);
 });
 
