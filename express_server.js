@@ -76,6 +76,8 @@ app.post("/register", (req, res) => {
   const data = req.body;
   console.log(users);
   users[randomUserID] = data;
+  res.cookie('username', randomUserID)
+  res.redirect("/urls")
 })
 
 
