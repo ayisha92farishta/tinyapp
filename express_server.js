@@ -47,7 +47,7 @@ app.use(bodyparser.urlencoded({extended: true}));
 
 //urls_index
 app.get("/urls", (req, res) => {
-  const templateVars = { urls : urlDatabase, username: req.cookies["username"] };
+  const templateVars = { urls : urlDatabase, username: users[req.cookies["user_id"]] };
   res.render("urls_index", templateVars)
 })
 
@@ -67,24 +67,27 @@ app.get("/", (req, res) => {
 //urls_registration 
 
 app.get("/register", (req, res) => {
-  const templateVars = {username: req.cookies["username"]}
+  const templateVars = {username: users[req.cookies["user_id"]]}
   res.render("urls_registration",templateVars);
 })
 
 app.post("/register", (req, res) => {
   const randomUserID = generateRandomString(8);
   const data = req.body;
-  console.log(users);
+  
   users[randomUserID] = data;
-  res.cookie('username', randomUserID)
-  res.redirect("/urls")
+  //console.log(users[randomUserID]);
+  res.cookie('user_id', randomUserID);
+  //console.log(users);
+  res.redirect("/urls");
 })
 
 
 
 //urls_new
 app.get("/urls/new",(req, res) => {
-  const templateVars = {username: req.cookies["username"]}
+  const templateVars = {username: users[req.cookies["user_id"]]}
+  //console.log(templateVars.username)
   res.render("urls_new", templateVars);
 })
 
@@ -93,13 +96,13 @@ app.get("/urls/new",(req, res) => {
 
   //handles login and logout requests
 app.post("/login", (req, res) => {
-    const username = req.body
-    res.cookie('username', username);
+    const username = users[req.cookies["user_id"]]
+    //res.cookie('username', username);
     res.redirect("/urls")
 });
 
 app.post("/logout", (req,res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect("/urls")
 })
 
@@ -110,7 +113,7 @@ app.post("/logout", (req,res) => {
 
 //urls_shows
 app.get("/urls/:shortURL",(req, res) => {
- const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"]} 
+ const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: users[req.cookies["user_id"]]} 
  res.render("urls_shows", templateVars)
 })
 
