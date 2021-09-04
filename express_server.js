@@ -44,8 +44,6 @@ function isLoggedIn(req, res, next) {
 const bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({extended: true}));
 
-//app.use(express.urlencoded()); //an alternative to the code above
-
 
 //urls_index
 app.get("/urls", (req, res) => {
@@ -72,6 +70,15 @@ app.get("/register", (req, res) => {
   const templateVars = {username: req.cookies["username"]}
   res.render("urls_registration",templateVars);
 })
+
+app.post("/register", (req, res) => {
+  const randomUserID = generateRandomString(8);
+  const data = req.body;
+  console.log(users);
+  users[randomUserID] = data;
+})
+
+
 
 //urls_new
 app.get("/urls/new",(req, res) => {
