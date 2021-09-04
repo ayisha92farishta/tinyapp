@@ -9,17 +9,18 @@
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">        
           <a class="nav-item nav-link" href="/urls">My URLs</a>
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+          <a class="nav-item nav-link" href="/register">Register</a>
       </ul>
    
       <% if( username ){ %>
         <h5 class="form-inline my-2 my-lg-0" style="margin: 2em">Welcome back <%= username.username %>!  </h5>
        
-        <form class="form-inline my-2 my-lg-0" method="POST" action="/urls/logout"> 
+        <form class="form-inline my-2 my-lg-0" method="POST" action="/logout"> 
                    
         <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">Sign out</button>  
        </form>
       <% } else { %>  
-         <form class="form-inline my-2 my-lg-0" method="POST" action="/urls/login">    
+         <form class="form-inline my-2 my-lg-0" method="POST" action="/login">    
       
             <input type="text" class="form-control mr-sm-2" name="username" placeholder="Username">     
             <button type="submit" class="btn btn-primary my-2 my-sm-0">Sign in</button>   
