@@ -22,6 +22,10 @@ function generateRandomString(len) {
   return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'');
 }
 
+function isLoggedIn(req, res, next) {
+  return req.isAuthenticated();
+}
+
 // reference to ejs files inside the views folder
 
 const bodyparser = require("body-parser");
@@ -41,6 +45,7 @@ app.post("/urls",(req, res) => {
   const data = req.body;
   urlDatabase[shortURL] = data.longURL; // saves data in the url database
   res.redirect(`/urls/${shortURL}`) //redirects user to the new url page
+
 })
 
 //main page
@@ -58,12 +63,19 @@ app.get("/urls/new",(req, res) => {
 
 
 
-  //handles login requests
+  //handles login and logout requests
 app.post("/urls/login", (req, res) => {
-    console.log(req.body)
-    res.cookie('username', req.body);
+    const username = req.body
+    res.cookie('username', username);
     res.redirect("/urls")
+});
+
+app.post("/urls/logout", (req,res) => {
+  res.clearCookie('username');
+  res.redirect("/urls")
 })
+
+
 
 
 
