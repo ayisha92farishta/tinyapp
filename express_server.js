@@ -85,10 +85,7 @@ app.post("/register", (req, res) => {
   } 
     
   for(let info in users){
-    
-    //console.log(users[info].email)
     const userEmail = users[info].email;
-    console.log(userEmail);
    if(email === userEmail) {
      return res.status(404).send("This email already exists. Please login or use another email.")
    } 
