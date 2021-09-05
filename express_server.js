@@ -111,8 +111,14 @@ app.get("/urls/new",(req, res) => {
 
 
 
-
+//-------------------urls_login----------------
   //handles login and logout requests
+
+app.get("/login", (req, res) => {
+  const templateVars = {username: users[req.cookies["user_id"]]};
+  res.render("urls_login",templateVars);
+})
+
 app.post("/login", (req, res) => {
     const username = users[req.cookies["user_id"]]
     //res.cookie('username', username);
