@@ -9,10 +9,9 @@ app.use(cookieParser())
 app.set('view engine', 'ejs');
 
 
-//Server database to store urls
+//Database to store urls
+
 const urlDatabase = {
-  // "b2xVn2": "http://www.lighthouselabs.ca",
-  // "9sm5xK": "http://www.google.com"
 };
 
 // Database to store user information
@@ -45,7 +44,9 @@ const bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({extended: true}));
 
 
-//urls_index
+//--------------------urls_index------------------------------
+
+
 app.get("/urls", (req, res) => {
   const templateVars = { urls : urlDatabase, username: users[req.cookies["user_id"]] };
   res.render("urls_index", templateVars)
@@ -64,7 +65,7 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-//urls_registration 
+//-------------------urls_registration -------------------------
 
 app.get("/register", (req, res) => {
   const templateVars = {username: users[req.cookies["user_id"]]}
@@ -72,19 +73,39 @@ app.get("/register", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  const randomUserID = generateRandomString(8);
-  const data = req.body;
   
+  const data = req.body;
+  const email = data.email;
+  const password = data.password;
+
+  //Logic to handle errors
+
+  if(!email || !password){
+    return res.status(404).send("Please enter both email and password")
+  } 
+    
+  for(let info in users){
+    
+    //console.log(users[info].email)
+    const userEmail = users[info].email;
+    console.log(userEmail);
+   if(email === userEmail) {
+     return res.status(404).send("This email already exists. Please login or use another email.")
+   } 
+  }
+
+  // If no errors then register new user 
+  const randomUserID = generateRandomString(8);
   users[randomUserID] = data;
-  //console.log(users[randomUserID]);
   res.cookie('user_id', randomUserID);
-  //console.log(users);
+
+  
   res.redirect("/urls");
-})
+});
 
 
 
-//urls_new
+//---------------urls_new---------------------
 app.get("/urls/new",(req, res) => {
   const templateVars = {username: users[req.cookies["user_id"]]}
   //console.log(templateVars.username)
@@ -111,7 +132,7 @@ app.post("/logout", (req,res) => {
 
 
 
-//urls_shows
+//-------------------urls_shows-------------------------
 app.get("/urls/:shortURL",(req, res) => {
  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: users[req.cookies["user_id"]]} 
  res.render("urls_shows", templateVars)
