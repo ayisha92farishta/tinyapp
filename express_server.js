@@ -107,7 +107,6 @@ app.post("/register", (req, res) => {
 //---------------urls_new---------------------
 app.get("/urls/new",(req, res) => {
   const templateVars = {user_id: users[req.cookies["user_id"]]}
-  //console.log(templateVars.user_id)
   res.render("urls_new", templateVars);
 })
 
@@ -122,6 +121,7 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
+
   const data = req.body;
   const email = data.email;
   const password = data.password;
@@ -130,27 +130,35 @@ app.post("/login", (req, res) => {
 
   if(!email || !password){
     return res.status(404).send("Please enter both email and password")
-  } 
+  }; 
     
-  for(let info in users){
+  for (let info in users) {
     const userEmail = users[info].email;
     const userPassword = users[info].password;
     const user_id = users[info].id;
     //console.log(userEmail);
+
     
-    if(email === userEmail && password === userPassword) {
-      
+    if(email === userEmail && password === userPassword) {      
       res.cookie('user_id', user_id );
-      //res.send("sucess")
-    } 
+      res.redirect("/urls");
+    } else if (email === userEmail && password !== userPassword){
+      res.status(403).send("Please enter correct password")
+    };
+     
+   } 
+
+  res.status(403).send("Looks like there is no account registered with that email!")
+
+    
+});
+
+
 
     // if(email !== userEmail) {
-    //   return res.status(403).send("Looks like there is no account registered with that email!")
+    //     return res.status(403).send("Looks like there is no account registered with that email!")
     // } 
- 
-   }    
-    res.redirect("/urls");
-});
+
 
 app.post("/logout", (req,res) => {
   res.clearCookie('user_id');
