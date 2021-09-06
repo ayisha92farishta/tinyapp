@@ -38,6 +38,8 @@ function isLoggedIn(req, res, next) {
   return req.isAuthenticated();
 }
 
+
+
 // reference to ejs files inside the views folder
 
 const bodyparser = require("body-parser");
