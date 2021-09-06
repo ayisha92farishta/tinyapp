@@ -34,11 +34,6 @@ function generateRandomString(len) {
   return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'');
 }
 
-function isLoggedIn(req, res, next) {
-  return req.isAuthenticated();
-}
-
-
 
 // reference to ejs files inside the views folder
 
