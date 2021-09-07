@@ -1,5 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
 
 
 const app = express();
@@ -52,11 +53,11 @@ app.get("/urls", (req, res) => {
 app.post("/urls",(req, res) => {
   const shortURL = generateRandomString(6);
   const data = req.body;
-  //const user_id = users[req.cookies["user_id"]];
+  const user_id = users[req.cookies["user_id"]];
   urlDatabase[shortURL] = data.longURL // saves data in the url database 
   console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`) //redirects user to the new url page
- //{longURL: data.longURL , userID:user_id }
+ //{longURL: data.longURL , userID: user_id}
 })
 
 //main page
