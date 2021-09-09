@@ -42,6 +42,14 @@ const bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({extended: true}));
 
 
+//--------------------urls_welcome--------------------------------
+
+app.get("/home", (req, res) => {
+  const templateVars = { urls : urlDatabase, user_id: users[req.cookies["user_id"]] };
+  res.render("urls_welcome", templateVars)
+})
+
+
 //--------------------urls_index------------------------------
 
 
@@ -51,19 +59,16 @@ app.get("/urls", (req, res) => {
 })
 
 app.post("/urls",(req, res) => {
+  const user_id = users[req.cookies["user_id"]];
   const shortURL = generateRandomString(6);
   const data = req.body;
-  const user_id = users[req.cookies["user_id"]];
+  
   urlDatabase[shortURL] = {longURL: data.longURL , userID: user_id.id}  // saves data in the url database 
   console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`) //redirects user to the new url page
- //data.longURL
+ 
 })
 
-//main page
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 
 //-------------------urls_registration -------------------------
 
