@@ -28,9 +28,22 @@
           <tr>
             <td> <a href="/u/<%= url %>"><%= url %></a>  </td>
             <td><%= urls[url].longURL %></td>
-            <td><form method="POST" action="/urls/<%= url %>/edit"><button type="submit" class="btn btn-outline-primary">Edit</button></form></td>
-            <td><form method="POST" action="/urls/<%= url %>/delete"><button type="submit" class="btn btn-outline-danger" >Delete</button></form></td>
-            
+            <td>
+              <% if( user_id ){ %>
+                 <form method="POST" action="/urls/<%= url %>/edit"><button type="submit" class="btn btn-outline-primary">Edit</button></form>
+              <% } else { %>  
+                 <a class="nav-item nav-link" href="/login">Login to edit</a>
+             <% } %>
+           </td>
+           
+           <td>
+            <% if( user_id ){ %>
+              <form method="POST" action="/urls/<%= url %>/delete"><button type="submit" class="btn btn-outline-danger" >Delete</button></form>
+            <% } else { %>  
+               <a class="nav-item nav-link" href="/login">Login to Delete</a>
+           <% } %>
+         </td>
+
           </tr>
         <% } %>
       </tbody>
