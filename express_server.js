@@ -13,6 +13,8 @@ app.set('view engine', 'ejs');
 //Database to store urls
 
 const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "userRandomID" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "userRandomID" }
 };
 
 // Database to store user information
@@ -35,6 +37,18 @@ function generateRandomString(len) {
   return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'');
 }
 
+function urlsForUser(id){
+  let urlInfo = {}  
+  for(let urls in urlDatabase){
+    const urlsUser = urlDatabase[urls].userID;
+    if(urlsUser === id){
+     urlInfo[urls] = urlDatabase[urls]
+   }
+  }
+  return urlInfo;
+}
+
+
 
 // reference to ejs files inside the views folder
 
@@ -50,16 +64,26 @@ app.get("/home", (req, res) => {
 })
 
 
+
 //--------------------urls_index------------------------------
 
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls : urlDatabase, user_id: users[req.cookies["user_id"]] };
+  const user = users[req.cookies["user_id"]];
+  if(!user){
+    return res.send("Please log in")
+  }
+  
+  const filteredURLs = urlsForUser(user.id);
+
+  const templateVars = { urls : filteredURLs, user_id: user };
+
   res.render("urls_index", templateVars)
 })
 
 app.post("/urls",(req, res) => {
-  const user_id = users[req.cookies["user_id"]];
+   const user_id = users[req.cookies["user_id"]];
+
   const shortURL = generateRandomString(6);
   const data = req.body;
   
@@ -170,7 +194,16 @@ app.post("/logout", (req,res) => {
 
 //-------------------urls_shows-------------------------
 app.get("/urls/:shortURL",(req, res) => {
- const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user_id: users[req.cookies["user_id"]]} 
+  const user = users[req.cookies["user_id"]];
+  if(!user){
+    return res.send("Please log in");
+  }
+  
+  if(user.id !== urlDatabase[req.params.shortURL].userID){
+    return res.send("Url is under different user");
+  }
+
+ const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user_id: user} 
  res.render("urls_shows", templateVars)
 })
 
@@ -193,6 +226,7 @@ app.get("/u/:shortURL", (req, res) => {
 
   //post route in correspondence with the delete form in urls_index.ejs
 app.post("/urls/:shortURL/delete", (req, res) => {
+
   const shortURL = req.params.shortURL;
   delete urlDatabase[shortURL];
   //res.send("Deleted")
