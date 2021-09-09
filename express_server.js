@@ -54,10 +54,10 @@ app.post("/urls",(req, res) => {
   const shortURL = generateRandomString(6);
   const data = req.body;
   const user_id = users[req.cookies["user_id"]];
-  urlDatabase[shortURL] = data.longURL // saves data in the url database 
+  urlDatabase[shortURL] = {longURL: data.longURL , userID: user_id.id}  // saves data in the url database 
   console.log(urlDatabase)
   res.redirect(`/urls/${shortURL}`) //redirects user to the new url page
- //{longURL: data.longURL , userID: user_id}
+ //data.longURL
 })
 
 //main page
@@ -77,6 +77,7 @@ app.post("/register", (req, res) => {
   const data = req.body;
   const email = data.email;
   const password = data.password;
+  const hashedPassword = bcrypt.hashSync(password, 10); //Hashed password
 
   //Logic to handle errors
 
@@ -154,17 +155,10 @@ app.post("/login", (req, res) => {
 
 
 
-    // if(email !== userEmail) {
-    //     return res.status(403).send("Looks like there is no account registered with that email!")
-    // } 
-
-
 app.post("/logout", (req,res) => {
   res.clearCookie('user_id');
   res.redirect("/urls")
 })
-
-
 
 
 
@@ -178,13 +172,14 @@ app.get("/urls/:shortURL",(req, res) => {
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const data = req.body;
-  urlDatabase[shortURL] = data.longURL; //overwrites the long url under the existing short url
+  const user_id = users[req.cookies["user_id"]];
+  urlDatabase[shortURL] = {longURL: data.longURL , userID: user_id.id}; //overwrites the long url under the existing short url
   res.redirect("/urls")
 })
 
   //redirects user to the longURL
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   if(!longURL){
    return res.status(404).send("Not found! Url not valid.");
   }  
