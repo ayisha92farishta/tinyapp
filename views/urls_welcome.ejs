@@ -14,11 +14,29 @@
   </header>
   <main style="margin: 10em;">
        <div class="text-center"> 
-      <h1>Welcome to Tiny App</h1>
-      <h5>Shorten your urls in just a few easy steps!</h5>
-      <h3>To create new account<a class="nav-item nav-link" href="/register">Sign up</a> </h3>
-      <h4>Already a memeber? <a class="nav-item nav-link" href="/login">Welcome back!</a> </h4>
+        <% if( user_id ){ %>
+            <div><h1 class="form-inline my-2 my-lg-0" style="margin: 2em"> Welcome to Tiny App !</h1> </div>
+            <div> <form class=" my-2 my-lg-0" method="POST" action="/logout"> 
+                     
+              <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">Sign out</button>  
+            </form>
+            </div>
+         
+          
+        <% } else { %>  
+          
+          <div><h1>Welcome to Tiny App</h1> </div>
+          <div><img class="img-responsive" src="./welcome.jpg">  </div>
+          <div><h5>Shorten your urls in just a few easy steps!</h5> </div>
+          <div> <h3>To create new account<a class="nav-item nav-link" href="/register">Sign up</a> </h3>
+      <h4>Already a memeber? <a class="nav-item nav-link" href="/login">Welcome back!</a> </h4></div>
+      
+      
 
+  
+       <% } %>
+
+       
 
       
         

@@ -171,14 +171,16 @@ app.post("/login", (req, res) => {
     
     if(email === userEmail && password === userPassword) {      
       res.cookie('user_id', user_id );
-      res.redirect("/urls");
+      return res.redirect("/urls");
+      
     } else if (email === userEmail && password !== userPassword){
-      res.status(403).send("Please enter correct password")
+     return res.status(403).send("Please enter correct password");
+      
     };
      
    } 
 
-  res.status(403).send("Looks like there is no account registered with that email!")
+   return res.status(403).send("Looks like there is no account registered with that email!")
 
 });
 
@@ -186,7 +188,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req,res) => {
   res.clearCookie('user_id');
-  res.redirect("/urls")
+  res.redirect("/home")
 })
 
 
@@ -226,29 +228,28 @@ app.get("/u/:shortURL", (req, res) => {
 
   //post route in correspondence with the delete form in urls_index.ejs
 app.post("/urls/:shortURL/delete", (req, res) => {
-
+  
+  const user = users[req.cookies["user_id"]];
+  
+  if(!user){
+    return res.send("Please log in");
+  }
   const shortURL = req.params.shortURL;
+ 
   delete urlDatabase[shortURL];
-  //res.send("Deleted")
+  
   res.redirect("/urls")
 })
 
   //post route in correspondence with the edit form in urls_index.ejs
 app.post("/urls/:shortURL/edit", (req, res) => {
+  const user = users[req.cookies["user_id"]];
+  if(!user){
+    return res.send("Please log in");
+  }
   const shortURL = req.params.shortURL;
   res.redirect(`/urls/${shortURL}`)
 })
-
-
-
-// //outputing the urlDatabase in a JSON string
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase);
-// });
-
-// app.get("/hello", (req, res) => {
-//   res.send("<html><body>Hello <b>World</b></body></html>\n")
-// })
 
 
 //Turning the server on
