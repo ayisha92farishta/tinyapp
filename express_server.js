@@ -2,7 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cookieSession = require('cookie-session')
 const bcrypt = require("bcrypt");
-
+const {generateRandomString, urlsForUser, getUserWithEmail, authenticateUser} = require('./helpers');
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -18,58 +18,12 @@ app.set('view engine', 'ejs');
 
 //Database to store urls
 
-const urlDatabase = {
-  // b6UTxQ: { longURL: "https://www.tsn.ca", userID: "userRandomID" },
-  // i3BoGr: { longURL: "https://www.google.ca", userID: "userRandomID" }
-};
+const urlDatabase = {};
 
 // Database to store user information
 
-const users = {
-  // 'userRandomID': {
-  //   id: "userRandomID", 
-  //   email: "user@example.com", 
-  //   password: "asd"
-  // },
-  // "user2RandomID": {
-  //   id: "user2RandomID", 
-  //   email: "user2@example.com", 
-  //   password: "zxc"
-  // }
-}
+const users = {};
 
-function generateRandomString(len) {
-  var p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'');
-}
-
-function urlsForUser(id){
-  let urlInfo = {}  
-  for(let urls in urlDatabase){
-    const urlsUser = urlDatabase[urls].userID;
-    if(urlsUser === id){
-     urlInfo[urls] = urlDatabase[urls]
-   }
-  }
-  return urlInfo;
-}
-
-const getUserWithEmail = (email, users) => {
-  for(let id in users){
-    if(users[id].email === email) {
-      return users[id];
-    }
-  }
-}
-
-const authenticateUser = (email, password, users) => {
-  const user = getUserWithEmail(email, users);
-  if (user) {
-    if(bcrypt.compareSync(password, user.password)){
-      return user
-    }
-  }
-}
 
 // reference to ejs files inside the views folder
 
@@ -175,15 +129,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
 
-  
   const {email, password} = req.body;
-
-
-
-  //console.log(" login password", data.password)
-  // const password = bcrypt.compareSync(data.password, by); //Hashed password
-  // console.log( "hashedPassword ----",  password)
-  //Logic to handle errors
 
   if(!email || !password){
     return res.status(404).send("Please enter both email and password")
@@ -198,29 +144,6 @@ app.post("/login", (req, res) => {
     return res.status(403).send("Please enter correct password and email");
   }
 
-  // // for (let info in users) {
-  // //   const userEmail = users[info].email;
-  // //   const userPassword = users[info].password;
-  // //   const user_id = users[info].id;
-  // //   console.log("userPassword -------",userPassword);
-
-    
-  //   if(email === userEmail && bcrypt.compareSync(data.password, userPassword)) {      
-  //     //res.cookie('user_id', user_id );
-  //     req.session["user_id"] = user_id;
-  //     return res.redirect("/urls");
-      
-  //   } else if (email === userEmail && password!== userPassword){
-  //    return res.status(403).send("Please enter correct password");
-      
-  //   };
-     
-  //  } 
-
-  //  return res.status(403).send("Looks like there is no account registered with that email!")
-
-
-
 });
 
 
@@ -230,7 +153,6 @@ app.post("/logout", (req,res) => {
   req.session = null;
   res.redirect("/home")
 })
-
 
 
 
