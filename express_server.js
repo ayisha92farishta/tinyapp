@@ -54,23 +54,22 @@ function urlsForUser(id){
   return urlInfo;
 }
 
-// function getUserWithEmail(userid, email, password){
-//   for(let id in users){
-//     if(users[id].email === email) {
-//       let user = user[id]
-//       return user;
-//     }
-//   }
-// }
+const getUserWithEmail = (email, users) => {
+  for(let id in users){
+    if(users[id].email === email) {
+      return users[id];
+    }
+  }
+}
 
-// function authenticateUser (email, password, users) {
-//   const user = getUserWithEmail(email, password)
-//   if (user) {
-//     if(user.password === password){
-//       return user
-//     }
-//   }
-// }
+const authenticateUser = (email, password, users) => {
+  const user = getUserWithEmail(email, users);
+  if (user) {
+    if(bcrypt.compareSync(password, user.password)){
+      return user
+    }
+  }
+}
 
 // reference to ejs files inside the views folder
 
@@ -127,7 +126,7 @@ app.post("/register", (req, res) => {
   
   const data = req.body;
   const email = data.email;
-  console.log("register password",data.password);
+  
   const password = bcrypt.hashSync(data.password, 10); //Hashed password
   
 
@@ -137,6 +136,7 @@ app.post("/register", (req, res) => {
     return res.status(404).send("Please enter both email and password")
   } 
     
+
   for(let info in users){
     const userEmail = users[info].email;
     if(email === userEmail) {
@@ -175,37 +175,51 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
 
-  const data = req.body;
-  const email = data.email;
-  console.log(" login password", data.password)
+  
+  const {email, password} = req.body;
+
+
+
+  //console.log(" login password", data.password)
   // const password = bcrypt.compareSync(data.password, by); //Hashed password
   // console.log( "hashedPassword ----",  password)
   //Logic to handle errors
 
-  if(!email || !data.password){
+  if(!email || !password){
     return res.status(404).send("Please enter both email and password")
   }; 
     
-  for (let info in users) {
-    const userEmail = users[info].email;
-    const userPassword = users[info].password;
-    const user_id = users[info].id;
-    console.log("userPassword -------",userPassword);
+  const user = authenticateUser(email, password, users)
+
+  if(user) {
+    req.session["user_id"] = user.id;
+    return res.redirect("/urls");
+  } else {
+    return res.status(403).send("Please enter correct password and email");
+  }
+
+  // // for (let info in users) {
+  // //   const userEmail = users[info].email;
+  // //   const userPassword = users[info].password;
+  // //   const user_id = users[info].id;
+  // //   console.log("userPassword -------",userPassword);
 
     
-    if(email === userEmail && bcrypt.compareSync(data.password, userPassword)) {      
-      //res.cookie('user_id', user_id );
-      req.session["user_id"] = user_id;
-      return res.redirect("/urls");
+  //   if(email === userEmail && bcrypt.compareSync(data.password, userPassword)) {      
+  //     //res.cookie('user_id', user_id );
+  //     req.session["user_id"] = user_id;
+  //     return res.redirect("/urls");
       
-    } else if (email === userEmail && password!== userPassword){
-     return res.status(403).send("Please enter correct password");
+  //   } else if (email === userEmail && password!== userPassword){
+  //    return res.status(403).send("Please enter correct password");
       
-    };
+  //   };
      
-   } 
+  //  } 
 
-   return res.status(403).send("Looks like there is no account registered with that email!")
+  //  return res.status(403).send("Looks like there is no account registered with that email!")
+
+
 
 });
 
