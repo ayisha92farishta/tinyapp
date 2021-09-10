@@ -48,7 +48,23 @@ function urlsForUser(id){
   return urlInfo;
 }
 
+// function getUserWithEmail(userid, email, password){
+//   for(let id in users){
+//     if(users[id].email === email) {
+//       let user = user[id]
+//       return user;
+//     }
+//   }
+// }
 
+// function authenticateUser (email, password, users) {
+//   const user = getUserWithEmail(email, password)
+//   if (user) {
+//     if(user.password === password){
+//       return user
+//     }
+//   }
+// }
 
 // reference to ejs files inside the views folder
 
@@ -105,8 +121,9 @@ app.post("/register", (req, res) => {
   
   const data = req.body;
   const email = data.email;
-  const password = data.password;
-  const hashedPassword = bcrypt.hashSync(password, 10); //Hashed password
+  console.log("register password",data.password);
+  const password = bcrypt.hashSync(data.password, 10); //Hashed password
+  
 
   //Logic to handle errors
 
@@ -123,11 +140,10 @@ app.post("/register", (req, res) => {
 
   // If no errors then register new user 
   const randomUserID = generateRandomString(8);
-  users[randomUserID] = data;
-  users[randomUserID].id = randomUserID;
+  users[randomUserID]= {id:randomUserID, email, password }
   res.cookie('user_id', randomUserID);
   
-  //console.log(users)
+  console.log(users)
   
   res.redirect("/urls");
 });
@@ -154,11 +170,12 @@ app.post("/login", (req, res) => {
 
   const data = req.body;
   const email = data.email;
-  const password = data.password;
-
+  console.log(" login password", data.password)
+  // const password = bcrypt.compareSync(data.password, by); //Hashed password
+  // console.log( "hashedPassword ----",  password)
   //Logic to handle errors
 
-  if(!email || !password){
+  if(!email || !data.password){
     return res.status(404).send("Please enter both email and password")
   }; 
     
@@ -166,14 +183,14 @@ app.post("/login", (req, res) => {
     const userEmail = users[info].email;
     const userPassword = users[info].password;
     const user_id = users[info].id;
-    //console.log(userEmail);
+    console.log("userPassword -------",userPassword);
 
     
-    if(email === userEmail && password === userPassword) {      
+    if(email === userEmail && bcrypt.compareSync(data.password, userPassword)) {      
       res.cookie('user_id', user_id );
       return res.redirect("/urls");
       
-    } else if (email === userEmail && password !== userPassword){
+    } else if (email === userEmail && password!== userPassword){
      return res.status(403).send("Please enter correct password");
       
     };

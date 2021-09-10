@@ -10,12 +10,11 @@
 </head>
 <body style="background-color: rgb(220, 245, 231);">
   <header>
-    
+    <!-- <img src="./images/welcome-png.png" class="img-responsive" alt="Welcome-image"> -->
   </header>
-  <main style="margin: 10em;">
-       <div class="text-center"> 
+       <div class="text-center" style="margin: 10em;"> 
         <% if( user_id ){ %>
-            <div><h1 class="form-inline my-2 my-lg-0" style="margin: 2em"> Welcome to Tiny App !</h1> </div>
+            <div><h1 class=" my-2 my-lg-0" style="margin: 2em"> Welcome to Tiny App!</h1> </div>
             <div> <form class=" my-2 my-lg-0" method="POST" action="/logout"> 
                      
               <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">Sign out</button>  
@@ -24,9 +23,9 @@
          
           
         <% } else { %>  
-          
+           
           <div><h1>Welcome to Tiny App</h1> </div>
-          <div><img class="img-responsive" src="./welcome.jpg">  </div>
+          
           <div><h5>Shorten your urls in just a few easy steps!</h5> </div>
           <div> <h3>To create new account<a class="nav-item nav-link" href="/register">Sign up</a> </h3>
       <h4>Already a memeber? <a class="nav-item nav-link" href="/login">Welcome back!</a> </h4></div>
@@ -42,7 +41,6 @@
         
     </div>
 
-  </main>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
