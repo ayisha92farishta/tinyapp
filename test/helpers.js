@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 
-const { getUserWithEmail } = require('../helpers.js');
+const { getUserWithEmail} = require('../helpers.js');
 
 const testUsers = {
   "userRandomID": {
@@ -15,13 +15,9 @@ const testUsers = {
   }
 };
 
-const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "userRandomID" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "userRandomID" }
-};
 
-describe('getUserByEmail', function() {
-  it('should return a user with valid email', function() {
+describe('getUserByEmail', () => {
+  it('should return a user with valid email', () => {
     const user = getUserWithEmail("user@example.com", testUsers);
     const expectedOutput = "userRandomID";
     assert.equal(user.id, expectedOutput);

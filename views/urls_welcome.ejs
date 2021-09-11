@@ -9,35 +9,21 @@
   <title>TinyApp</title>
 </head>
 <body style="background-color: rgb(220, 245, 231);">
-  <header>
-    <!-- <img src="./images/welcome-png.png" class="img-responsive" alt="Welcome-image"> -->
-  </header>
-       <div class="text-center" style="margin: 10em;"> 
+         <div class="text-center" style="margin: 10em;"> 
+
+          <!-- Welcome page changes depending on user being logged in or out -->
         <% if( user_id ){ %>
             <div><h1 class=" my-2 my-lg-0" style="margin: 2em"> Welcome to Tiny App!</h1> </div>
-            <div> <form class=" my-2 my-lg-0" method="POST" action="/logout"> 
-                     
+            <div> <form class=" my-2 my-lg-0" method="POST" action="/logout">                      
               <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">Sign out</button>  
             </form>
-            </div>
-         
-          
-        <% } else { %>  
-           
-          <div><h1>Welcome to Tiny App</h1> </div>
-          
+            </div>         
+        <% } else { %>             
+          <div><h1>Welcome to Tiny App</h1> </div>          
           <div><h5>Shorten your urls in just a few easy steps!</h5> </div>
           <div> <h3>To create new account<a class="nav-item nav-link" href="/register">Sign up</a> </h3>
       <h4>Already a memeber? <a class="nav-item nav-link" href="/login">Welcome back!</a> </h4></div>
-      
-      
-
-  
-       <% } %>
-
-       
-
-      
+       <% } %>   
         
     </div>
 

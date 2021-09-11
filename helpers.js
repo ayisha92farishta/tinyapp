@@ -8,7 +8,6 @@ const generateRandomString = (len) => {
 };
 
 const urlsForUser = (id , urlDatabase) => {
-  console.log("urlDatabase",urlDatabase);
   let urlInfo = {};
   for (let urls in urlDatabase) {
     const urlsUser = urlDatabase[urls].userID;

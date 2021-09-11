@@ -43,59 +43,58 @@ app.get("/home", (req, res) => {
 //--------------------urls_index------------------------------
 
 
+//GET
 app.get("/urls", (req, res) => {
   const user = users[req.session["user_id"]];
   if (!user) {
     return res.send("Please log in");
-  }
-  
-  const filteredURLs = urlsForUser(user.id, urlDatabase);
- 
+  }  
+  const filteredURLs = urlsForUser(user.id, urlDatabase); 
   const templateVars = { urls : filteredURLs, user_id: user };
-
   res.render("urls_index", templateVars);
 });
 
+//POST
 app.post("/urls",(req, res) => {
   const user_id = users[req.session["user_id"]];
 
   const shortURL = generateRandomString(6);
   const data = req.body;
   
-  urlDatabase[shortURL] = {longURL: data.longURL , userID: user_id.id};  // saves data in the url database
+  // saves data in the url database:
+  urlDatabase[shortURL] = {longURL: data.longURL , userID: user_id.id};  
 
-  res.redirect(`/urls/${shortURL}`); //redirects user to the new url page
+  //redirects user to the new url page:
+  res.redirect(`/urls/${shortURL}`); 
  
 });
 
 
 //-------------------urls_registration -------------------------
 
+//GET
 app.get("/register", (req, res) => {
   const templateVars = {user_id: users[req.session["user_id"]]};
   res.render("urls_registration",templateVars);
 });
 
+
+//POST
 app.post("/register", (req, res) => {
-  
   const data = req.body;
-  const email = data.email;
-  
+  const email = data.email;  
   const password = bcrypt.hashSync(data.password, 10); //Hashed password
   
-
-  //Logic to handle errors
+  //Error handling
 
   if (!email || !password) {
     return res.status(404).send("Please enter both email and password");
-  }
-    
+  }    
+  const existingUser = getUserWithEmail(email,users);
 
-  for (let info in users) {
-    const userEmail = users[info].email;
-    if (email === userEmail) {
-      return res.status(404).send("This email already exists. Please login or use another email.");
-    }
+
+  if(existingUser){
+    return res.status(404).send("This email already exists. Please login or use another email.");
   }
 
   // If no errors then register new user
@@ -110,6 +109,7 @@ app.post("/register", (req, res) => {
 
 
 //---------------urls_new---------------------
+//GET
 app.get("/urls/new",(req, res) => {
   const templateVars = {user_id: users[req.session["user_id"]]};
   res.render("urls_new", templateVars);
@@ -118,13 +118,16 @@ app.get("/urls/new",(req, res) => {
 
 
 //-------------------urls_login----------------
-//handles login and logout requests
 
+
+//GET
 app.get("/login", (req, res) => {
   const templateVars = {user_id: users[req.session["user_id"]]};
   res.render("urls_login",templateVars);
 });
 
+
+//POST
 app.post("/login", (req, res) => {
 
   const {email, password} = req.body;
@@ -145,9 +148,8 @@ app.post("/login", (req, res) => {
 });
 
 
-
+//POST
 app.post("/logout", (req,res) => {
-  
   req.session = null;
   res.redirect("/home");
 });
@@ -155,6 +157,8 @@ app.post("/logout", (req,res) => {
 
 
 //-------------------urls_shows-------------------------
+
+//GET
 app.get("/urls/:shortURL",(req, res) => {
   const user = users[req.session["user_id"]];
   if (!user) {
@@ -169,15 +173,20 @@ app.get("/urls/:shortURL",(req, res) => {
   res.render("urls_shows", templateVars);
 });
 
+//POST
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   const data = req.body;
   const user_id = users[req.session["user_id"]];
-  urlDatabase[shortURL] = {longURL: data.longURL , userID: user_id.id}; //overwrites the long url under the existing short url
+
+  //overwrites the long url under the existing short url:
+  urlDatabase[shortURL] = {longURL: data.longURL , userID: user_id.id}; 
   res.redirect("/urls");
 });
 
-//redirects user to the longURL
+
+//GET
+//redirects user to the longURL:
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   if (!longURL) {
@@ -186,22 +195,18 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
-//post route in correspondence with the delete form in urls_index.ejs
-app.post("/urls/:shortURL/delete", (req, res) => {
-  
-  const user = users[req.session["user_id"]];
-  
+//POST --- delete
+app.post("/urls/:shortURL/delete", (req, res) => {  
+  const user = users[req.session["user_id"]];  
   if (!user) {
     return res.send("Please log in");
   }
-  const shortURL = req.params.shortURL;
- 
-  delete urlDatabase[shortURL];
-  
+  const shortURL = req.params.shortURL; 
+  delete urlDatabase[shortURL];  
   res.redirect("/urls");
 });
 
-//post route in correspondence with the edit form in urls_index.ejs
+//POST --- edit
 app.post("/urls/:shortURL/edit", (req, res) => {
   const user = users[req.session["user_id"]];
   if (!user) {

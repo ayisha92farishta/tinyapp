@@ -3,12 +3,12 @@
     <a class="navbar-brand" href="/home">TinyApp</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button>
-  
+    </button>  
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">        
           <a class="nav-item nav-link" href="/urls">My URLs</a>
 
+          <!-- Only user can create an url -->
           <% if( user_id ){ %>
             <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
           <% } else { %>  
@@ -16,7 +16,8 @@
          <% } %>
           
       </ul>
-   
+         
+      <!-- Header change depending on weather user is logged in or out -->
       <% if( user_id ){ %>
 
         <h5 class="form-inline my-2 my-lg-0" style="margin: 2em">Logged in with email : <%= user_id.email %> </h5>
