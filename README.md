@@ -23,8 +23,8 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## The TinyApp Experience
 
--Create an account by signing up with an email and a password.
--Then you are free to start generating you own unique short urls.
--Once you are done and have signed off you can login with the same user name and password ('this time by signing in) and voila! Your urls are there just the way you left them!
--How ever since it's database is inside the server once the server restarts all data is lost. And you get to start a fresh!
--Enjoy!
+- Create an account by signing up with an email and a password.
+- Then you are free to start generating you own unique short urls.
+- Once you are done and have signed off you can login with the same user name and password ('this time by signing in) and voila! Your urls are there just the way you left them!
+- How ever since it's database is inside the server once the server restarts all data is lost. And you get to start a fresh!
+- Enjoy!
