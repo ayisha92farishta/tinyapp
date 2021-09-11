@@ -1,20 +1,24 @@
+//Files that are installed and required by the app to function properly
+
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cookieSession = require('cookie-session');
+const bodyparser = require("body-parser");
 const bcrypt = require("bcrypt");
 const {generateRandomString, urlsForUser, getUserWithEmail, authenticateUser} = require('./helpers');
 
 const app = express();
 const PORT = 8080; // default port 8080
 
+// reference to ejs files inside the views folder
+app.set('view engine', 'ejs');
+
 app.use(cookieParser());
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
 }));
-
-app.set('view engine', 'ejs');
-
+app.use(bodyparser.urlencoded({extended: true}));
 
 //Database to store urls
 
@@ -24,20 +28,12 @@ const urlDatabase = {};
 
 const users = {};
 
-
-// reference to ejs files inside the views folder
-
-const bodyparser = require("body-parser");
-app.use(bodyparser.urlencoded({extended: true}));
-
-
 //--------------------urls_welcome--------------------------------
 
 app.get("/home", (req, res) => {
   const templateVars = { urls : urlDatabase, user_id: users[req.session["user_id"]] };
   res.render("urls_welcome", templateVars);
 });
-
 
 
 //--------------------urls_index------------------------------
@@ -108,7 +104,7 @@ app.post("/register", (req, res) => {
 
 
 
-//---------------urls_new---------------------
+//---------------------urls_new---------------------
 //GET
 app.get("/urls/new",(req, res) => {
   const templateVars = {user_id: users[req.session["user_id"]]};
@@ -117,7 +113,7 @@ app.get("/urls/new",(req, res) => {
 
 
 
-//-------------------urls_login----------------
+//---------------------urls_login----------------
 
 
 //GET
@@ -129,22 +125,17 @@ app.get("/login", (req, res) => {
 
 //POST
 app.post("/login", (req, res) => {
-
   const {email, password} = req.body;
-
   if (!email || !password) {
     return res.status(404).send("Please enter both email and password");
-  }
-    
+  }    
   const user = authenticateUser(email, password, users);
-
   if (user) {
     req.session["user_id"] = user.id;
     return res.redirect("/urls");
   } else {
     return res.status(403).send("Please enter correct password and email");
   }
-
 });
 
 
@@ -153,7 +144,6 @@ app.post("/logout", (req,res) => {
   req.session = null;
   res.redirect("/home");
 });
-
 
 
 //-------------------urls_shows-------------------------
